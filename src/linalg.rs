@@ -1,4 +1,5 @@
-use crate::vector::Vector;
+use crate::matrix::{Matrix, MatrixError};
+use crate::vector::{Vector, VectorError};
 
 pub fn linear_combination(u: &[Vector], coefs: &[f32]) -> Result<Vector, String> {
     if u.is_empty() {
@@ -18,6 +19,26 @@ pub fn linear_combination(u: &[Vector], coefs: &[f32]) -> Result<Vector, String>
         result.add(&scaled_vector).map_err(|e| "Vector size mismatch".to_string())?;
     }
 
+    Ok(result)
+}
+
+pub fn lerp(u: f32, v: f32, t: f32) -> f32 {
+    u + (v - u) * t
+}
+
+pub fn lerp_vector(u: &Vector, v: &Vector, t: f32) -> Result<Vector, VectorError> {
+    let mut result = v.clone();
+    result.sub(&u)?;
+    result.scl(t);
+    result.add(&u)?;
+    Ok(result)
+}
+
+pub fn lerp_matrix(u: &Matrix, v: &Matrix, t: f32) -> Result<Matrix, MatrixError> {
+    let mut result = v.clone();
+    result.sub(&u)?;
+    result.scl(t);
+    result.add(&u)?;
     Ok(result)
 }
 
