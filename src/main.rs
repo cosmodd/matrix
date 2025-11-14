@@ -1,15 +1,15 @@
-use crate::matrix::Matrix;
+use crate::linalg::linear_combination;
+use crate::vector::Vector;
 
 mod vector;
 mod matrix;
+mod linalg;
 
 fn main() {
-    let mut mat = Matrix::from([
-        [1.0, 2.0, 3.0],
-        [4.0, 5.0, 6.0],
-        [7.0, 8.0, 9.0],
-    ]);
+    let v1 = Vector::from([1., 2., 3.]);
+    let v2 = Vector::from([0., 10., -100.]);
 
-    println!("{:?}", mat);
-    println!("{}", mat);
+    let lc = linear_combination(&[v1, v2], &[10., -2.]);
+
+    println!("Linear combination: {}", lc);
 }
