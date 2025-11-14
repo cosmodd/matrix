@@ -1,6 +1,10 @@
 use crate::vector::Vector;
 
-pub fn linear_combination(u: &[Vector], coefs: &[f32]) -> Vector {
+pub fn linear_combination(u: &[Vector], coefs: &[f32]) -> Result<Vector, String> {
+    if u.len() != coefs.len() {
+        return Err("u.len() != coefs.len()".to_string());
+    }
+
     let mut us = u.to_owned();
 
     us.iter_mut().enumerate().for_each(|(i, u)| {
@@ -12,5 +16,5 @@ pub fn linear_combination(u: &[Vector], coefs: &[f32]) -> Vector {
         let _ = first[0].add(&rest[i]);
     }
 
-    us[0].clone()
+    Ok(us[0].clone())
 }
