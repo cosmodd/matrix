@@ -1,25 +1,21 @@
 use std::fmt::{Display, Formatter};
-use std::ops;
 
 #[derive(Debug)]
 pub enum VectorError {
     SizeMismatch,
 }
 
-#[derive(Eq, PartialEq, Clone, Debug)]
-pub struct Vector<K> {
-    data: Vec<K>
+#[derive(PartialEq, Clone, Debug)]
+pub struct Vector {
+    data: Vec<f32>
 }
 
-impl<K> Vector<K> {
+impl Vector {
     pub fn size(&self) -> usize {
         self.data.len()
     }
-}
 
-impl<K> Vector<K> where K: ops::Add<Output=K> + Copy
-{
-    pub fn add(&mut self, v: &Vector<K>) -> Result<(), VectorError> {
+    pub fn add(&mut self, v: &Vector) -> Result<(), VectorError> {
         if self.size() != v.size() {
             return Err(VectorError::SizeMismatch);
         }
@@ -27,10 +23,8 @@ impl<K> Vector<K> where K: ops::Add<Output=K> + Copy
         self.data.iter_mut().zip(v.data.iter()).for_each(|(x, y)| *x = *x + *y);
         Ok(())
     }
-}
 
-impl<K> Vector<K> where K: ops::Sub<Output=K> + Copy {
-    pub fn sub(&mut self, v: &Vector<K>) -> Result<(), VectorError> {
+    pub fn sub(&mut self, v: &Vector) -> Result<(), VectorError> {
         if self.size() != v.size() {
             return Err(VectorError::SizeMismatch);
         }
@@ -38,21 +32,19 @@ impl<K> Vector<K> where K: ops::Sub<Output=K> + Copy {
         self.data.iter_mut().zip(v.data.iter()).for_each(|(x, y)| *x = *x - *y);
         Ok(())
     }
-}
 
-impl<K> Vector<K> where K: ops::Mul<Output=K> + Copy {
-    pub fn scl(&mut self, scalar: K) {
+    pub fn scl(&mut self, scalar: f32) {
         self.data.iter_mut().for_each(|v| *v = *v * scalar);
     }
 }
 
-impl<K: Clone, const N: usize> From<[K; N]> for Vector<K> {
-    fn from(values: [K; N]) -> Self {
+impl<const N: usize> From<[f32; N]> for Vector {
+    fn from(values: [f32; N]) -> Self {
         Self { data: values.to_vec() }
     }
 }
 
-impl<K> Display for Vector<K> where K: Display {
+impl Display for Vector {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "[")?;
         for i in 0..(self.data.len() - 1) {
