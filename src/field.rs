@@ -1,6 +1,6 @@
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
-trait Field:
+pub trait Field:
     Copy +
     PartialEq +
     Add<Output = Self> +
