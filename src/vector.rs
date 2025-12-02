@@ -17,6 +17,12 @@ impl<K: Field> Vector<K> {
     }
 }
 
+impl<K: Field, const S: usize> From<[K; S]> for Vector<K> {
+    fn from(data: [K; S]) -> Self {
+        Vector { data: data.to_vec() }
+    }
+}
+
 impl<K: Field> fmt::Display for Vector<K> {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "( ")?;
