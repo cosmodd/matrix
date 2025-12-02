@@ -1,16 +1,16 @@
-use std::fmt::Debug;
-use std::ops::{Add, Div, Mul, Neg, Sub};
+use std::{fmt, ops};
 
 pub trait Field:
     Copy +
     Clone +
-    Debug +
     PartialEq +
-    Add<Output = Self> +
-    Sub<Output = Self> +
-    Div<Output = Self> +
-    Mul<Output = Self> +
-    Neg<Output = Self>
+    fmt::Debug +
+    fmt::Display +
+    ops::Add<Output = Self> +
+    ops::Sub<Output = Self> +
+    ops::Div<Output = Self> +
+    ops::Mul<Output = Self> +
+    ops::Neg<Output = Self>
 {
     fn zero() -> Self;
     fn one() -> Self;
