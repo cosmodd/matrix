@@ -17,6 +17,22 @@ impl<K: Field> Vector<K> {
     }
 }
 
+impl<K: Field> PartialEq for Vector<K> {
+    fn eq(&self, other: &Self) -> bool {
+        if self.size() != other.size() {
+            return false;
+        }
+
+        for i in 0..self.data.len() {
+            if self.data[i] != other.data[i] {
+                return false;
+            }
+        }
+
+        true
+    }
+}
+
 impl<K: Field, const S: usize> From<[K; S]> for Vector<K> {
     fn from(data: [K; S]) -> Self {
         Vector { data: data.to_vec() }
