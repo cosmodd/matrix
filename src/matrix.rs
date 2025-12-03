@@ -38,6 +38,24 @@ impl<K: Field> Matrix<K> {
     }
 }
 
+impl<K: Field> PartialEq for Matrix<K> {
+    fn eq(&self, other: &Self) -> bool {
+        if self.rows() != other.rows() || self.columns() != other.columns() {
+            return false;
+        }
+
+        for row in 0..self.rows() {
+            for column in 0..self.columns() {
+                if self.data[column][row] != other.data[column][row] {
+                    return false;
+                }
+            }
+        }
+
+        true
+    }
+}
+
 impl<K: Field, const R: usize, const C: usize> From<[[K; C]; R]> for Matrix<K> {
     fn from(data: [[K; C]; R]) -> Self {
         let mut columns = vec![vec![K::zero(); R]; C];
@@ -78,5 +96,23 @@ impl<K: Field> fmt::Display for Matrix<K> {
             writeln!(f, " │")?;
         }
         write!(f, "└{}┘", first_last_spaces)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::matrix::Matrix;
+
+    #[test]
+    fn matrix_equality() {
+        let a = Matrix::from([
+            [1., 2., 3., 4.],
+            [5., 6., 7., 8.],
+        ]);
+        let b = a.clone();
+
+        assert_eq!(a, a);
+        assert_eq!(a, b);
+        assert_ne!(a, Matrix::zeros(1, 1));
     }
 }
