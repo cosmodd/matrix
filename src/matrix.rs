@@ -44,7 +44,7 @@ impl<K: Field, const R: usize, const C: usize> From<[[K; C]; R]> for Matrix<K> {
 
         for column in 0..C {
             for row in 0..R {
-                columns[row][column] = data[column][row].clone();
+                columns[column][row] = data[row][column].clone();
             }
         }
 
