@@ -1,5 +1,5 @@
 use crate::field::Field;
-use std::fmt;
+use std::{fmt, ops};
 
 #[derive(Debug, Clone)]
 pub struct Matrix<K> {
@@ -99,6 +99,24 @@ impl<K: Field> fmt::Display for Matrix<K> {
     }
 }
 
+impl<K: Field> ops::Add for Matrix<K> {
+    type Output = Self;
+
+    fn add(mut self, other: Self) -> Self::Output {
+        if self.rows() != other.rows() || self.columns() != other.columns() {
+            panic!("Matrices must have the same sizes");
+        }
+
+        for x in 0..self.columns() {
+            for y in 0..self.rows() {
+                self.data[x][y] = self.data[x][y] + other.data[x][y];
+            }
+        }
+
+        self
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::matrix::Matrix;
@@ -114,5 +132,22 @@ mod tests {
         assert_eq!(a, a);
         assert_eq!(a, b);
         assert_ne!(a, Matrix::zeros(1, 1));
+    }
+
+    #[test]
+    fn matrix_addition() {
+        let a = Matrix::from([
+            [1., 2.],
+            [3., 4.],
+        ]);
+        let b = Matrix::from([
+            [7., 4.],
+            [-2., 2.]
+        ]);
+
+        assert_eq!(a.clone() + b.clone(), Matrix::from([
+            [8., 6.],
+            [1., 6.]
+        ]));
     }
 }
