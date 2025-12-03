@@ -135,6 +135,20 @@ impl<K: Field> ops::Sub for Matrix<K> {
     }
 }
 
+impl<K: Field> ops::Mul<K> for Matrix<K> {
+    type Output = Self;
+
+    fn mul(mut self, other: K) -> Self::Output {
+        for x in 0..self.columns() {
+            for y in 0..self.rows() {
+                self.data[x][y] = self.data[x][y] * other;
+            }
+        }
+
+        self
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::matrix::Matrix;
@@ -183,6 +197,20 @@ mod tests {
         assert_eq!(a - b, Matrix::from([
             [-6., -2.],
             [5., 2.]
+        ]));
+    }
+
+    #[test]
+    fn matrix_scalar_mul() {
+        let a = Matrix::from([
+            [1., 2.],
+            [3., 4.],
+        ]);
+
+        assert_eq!(a.clone() * 0., Matrix::zeros(2, 2));
+        assert_eq!(a.clone() * 2., Matrix::from([
+            [2., 4.],
+            [6., 8.]
         ]));
     }
 }
