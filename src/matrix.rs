@@ -117,6 +117,24 @@ impl<K: Field> ops::Add for Matrix<K> {
     }
 }
 
+impl<K: Field> ops::Sub for Matrix<K> {
+    type Output = Self;
+
+    fn sub(mut self, other: Self) -> Self::Output {
+        if self.rows() != other.rows() || self.columns() != other.columns() {
+            panic!("Matrices must have the same sizes");
+        }
+
+        for x in 0..self.columns() {
+            for y in 0..self.rows() {
+                self.data[x][y] = self.data[x][y] - other.data[x][y];
+            }
+        }
+
+        self
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::matrix::Matrix;
@@ -145,9 +163,26 @@ mod tests {
             [-2., 2.]
         ]);
 
-        assert_eq!(a.clone() + b.clone(), Matrix::from([
+        assert_eq!(a + b, Matrix::from([
             [8., 6.],
             [1., 6.]
+        ]));
+    }
+
+    #[test]
+    fn matrix_subtraction() {
+        let a = Matrix::from([
+            [1., 2.],
+            [3., 4.],
+        ]);
+        let b = Matrix::from([
+            [7., 4.],
+            [-2., 2.]
+        ]);
+
+        assert_eq!(a - b, Matrix::from([
+            [-6., -2.],
+            [5., 2.]
         ]));
     }
 }
