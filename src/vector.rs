@@ -1,6 +1,6 @@
 use crate::field::Field;
-use std::fmt;
 use std::fmt::Formatter;
+use std::{fmt, ops};
 
 #[derive(Debug, Clone)]
 pub struct Vector<K> {
@@ -8,12 +8,12 @@ pub struct Vector<K> {
 }
 
 impl<K: Field> Vector<K> {
-    pub fn new(data: Vec<K>) -> Vector<K> {
-        Vector { data }
-    }
-
     pub fn size(&self) -> usize {
         self.data.len()
+    }
+
+    pub fn zeros(size: usize) -> Vector<K> {
+        Self { data: vec![K::zero(); size] }
     }
 }
 
@@ -48,5 +48,75 @@ impl<K: Field> fmt::Display for Vector<K> {
             .join("  ");
         write!(f, "{}", numbers)?;
         write!(f, " )")
+    }
+}
+
+impl<K: Field> ops::Add for Vector<K> {
+    type Output = Self;
+
+    fn add(mut self, other: Self) -> Self::Output {
+        if self.size() != other.size() {
+            panic!("Vectors must have the same size!");
+        }
+
+        for (i, value) in self.data.iter_mut().enumerate() {
+            *value = *value + other.data[i];
+        }
+        self
+    }
+}
+
+impl<K: Field> ops::Sub for Vector<K> {
+    type Output = Self;
+
+    fn sub(mut self, other: Self) -> Self::Output {
+        if self.size() != other.size() {
+            panic!("Vectors must have the same size!");
+        }
+
+        for (i, value) in self.data.iter_mut().enumerate() {
+            *value = *value - other.data[i];
+        }
+        self
+    }
+}
+
+impl<K: Field> ops::Mul<K> for Vector<K> {
+    type Output = Self;
+
+    fn mul(mut self, other: K) -> Self::Output {
+        for  value in self.data.iter_mut() {
+            *value = *value * other;
+        }
+        self
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn vector_add() {
+        let a = Vector::from([1., 2., 3.]);
+        let b = Vector::from([3., 2., 1.]);
+
+        assert_eq!(a.clone() + a.clone(), Vector::from([2., 4., 6.]));
+        assert_eq!(b.clone() + Vector::zeros(3), b);
+    }
+
+    #[test]
+    fn vector_sub() {
+        let a = Vector::from([1., 2., 3.]);
+        let b = Vector::from([3., 2., 1.]);
+        assert_eq!(a.clone() - a.clone(), Vector::zeros(3));
+        assert_eq!(Vector::zeros(3) - b.clone(), Vector::from([-3., -2., -1.]));
+    }
+
+    #[test]
+    fn vector_scalar_mul() {
+        let a = Vector::from([1., 2., 3.]);
+        assert_eq!(a.clone() * 2., Vector::from([2., 4., 6.]));
+        assert_eq!(a.clone() * -1., Vector::from([-1., -2., -3.]));
     }
 }
