@@ -3,6 +3,7 @@ use crate::vector::Vector;
 mod field;
 mod vector;
 mod matrix;
+mod common;
 
 fn main() {
     let a = Vector::from([0.0, 10.0, 20.0, 30.0, 40.0]);
