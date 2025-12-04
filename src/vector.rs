@@ -15,6 +15,14 @@ impl<K: Field> Vector<K> {
     pub fn zeros(size: usize) -> Vector<K> {
         Self { data: vec![K::zero(); size] }
     }
+
+    pub fn mul_add(mut self, other: &Self, scalar: K) -> Self {
+        for i in 0..self.size() {
+            self.data[i] = self.data[i].mul_add(scalar, other.data[i]);
+        }
+
+        self
+    }
 }
 
 impl<K: Field> PartialEq for Vector<K> {
