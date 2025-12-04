@@ -14,9 +14,17 @@ pub trait Field:
 {
     fn zero() -> Self;
     fn one() -> Self;
+
+    fn mul_add(self, a: Self, b: Self) -> Self {
+        (self * a) + b
+    }
 }
 
 impl Field for f32 {
     fn zero() -> Self { 0.0 }
     fn one() -> Self { 1.0 }
+
+    fn mul_add(self, a: Self, b: Self) -> Self {
+        self.mul_add(a, b)
+    }
 }
