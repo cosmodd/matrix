@@ -1,4 +1,4 @@
-use crate::field::Field;
+use crate::traits::Field;
 use std::fmt::Formatter;
 use std::{fmt, ops};
 

@@ -1,6 +1,6 @@
 use crate::vector::Vector;
 
-mod field;
+mod traits;
 mod vector;
 mod matrix;
 mod common;

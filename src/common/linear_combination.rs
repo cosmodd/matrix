@@ -1,4 +1,4 @@
-use crate::field::Field;
+use crate::traits::field::Field;
 use crate::vector::Vector;
 
 pub fn linear_combination<K: Field>(u: &[Vector<K>], coefs: &[K]) -> Vector<K> {

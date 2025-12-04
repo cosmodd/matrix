@@ -1,4 +1,4 @@
-use crate::field::Field;
+use crate::traits::Field;
 use std::{fmt, ops};
 
 #[derive(Debug, Clone)]
