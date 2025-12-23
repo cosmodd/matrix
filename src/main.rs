@@ -1,14 +1,21 @@
 use crate::core::matrix::Matrix;
+use crate::core::vector::Vector;
 
 mod core;
 
 fn main() {
-    let a = Matrix::from_rows([
-        [1.1, 2.2, 3.3],
-        [4.4, 5.0, 6.0],
-        [7.0, 8.0, 9.0],
+    let ma = Matrix::from_rows([
+        [1.0, 2.0, 3.0],
+        [4.0, 5.0, 6.0],
+        [7.0, 8.0, 9.0]
     ]);
 
-    println!("{:?}", a);
+    println!("{}", ma);
+    println!("{}", ma);
+
+    let a = Vector::from([1.0, 2.0, 3.0]);
+    let b = Vector::from([4.0, 5.0, 6.0]);
+
     println!("{}", a);
+    println!("{}", b);
 }

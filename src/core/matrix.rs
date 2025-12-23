@@ -61,7 +61,7 @@ where
 
 impl<K> fmt::Display for Matrix<K>
 where
-    K: fmt::Display + fmt::Debug,
+    K: fmt::Display,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let (width, height) = self.shape;
@@ -91,7 +91,10 @@ where
                     write!(f, "  ")?;
                 }
             }
-            writeln!(f, " {}", delim_chars.1)?;
+            write!(f, " {}", delim_chars.1)?;
+            if row < height - 1 {
+                writeln!(f)?;
+            }
         }
 
         Ok(())
