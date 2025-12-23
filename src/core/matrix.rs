@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::fmt;
 use std::fmt::Formatter;
 
@@ -7,7 +9,10 @@ pub struct Matrix<K> {
     data: Vec<K>,
 }
 
-impl<K> Matrix<K> where K: Clone {
+impl<K> Matrix<K>
+where
+    K: Clone,
+{
     pub fn shape(&self) -> (usize, usize) {
         self.shape
     }

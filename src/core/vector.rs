@@ -1,5 +1,7 @@
-use std::fmt;
+#![allow(dead_code)]
+
 use crate::core::matrix::Matrix;
+use std::fmt;
 
 #[derive(Debug)]
 pub struct Vector<K> {
@@ -37,7 +39,10 @@ where
     }
 }
 
-impl<K> fmt::Display for Vector<K> where K: fmt::Display {
+impl<K> fmt::Display for Vector<K>
+where
+    K: fmt::Display,
+{
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         self.data.fmt(f)?;
         Ok(())
