@@ -48,3 +48,13 @@ where
         Ok(())
     }
 }
+
+impl<K> PartialEq for Vector<K> where K: PartialEq + Clone {
+    fn eq(&self, other: &Self) -> bool {
+        if self.size() != other.size() {
+            return false;
+        }
+
+        self.data == other.data
+    }
+}

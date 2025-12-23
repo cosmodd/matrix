@@ -10,8 +10,6 @@ pub struct Matrix<K> {
 }
 
 impl<K> Matrix<K>
-where
-    K: Clone,
 {
     pub fn shape(&self) -> (usize, usize) {
         self.shape
@@ -20,7 +18,9 @@ where
     pub fn is_square(&self) -> bool {
         self.shape.0 == self.shape.1
     }
+}
 
+impl<K> Matrix<K> where K: Clone {
     pub fn from_rows<const W: usize, const H: usize>(values: [[K; W]; H]) -> Self {
         let mut data = Vec::<K>::with_capacity(W * H);
 
@@ -103,5 +103,24 @@ where
         }
 
         Ok(())
+    }
+}
+
+impl<K> PartialEq for Matrix<K> where K: PartialEq {
+    fn eq(&self, other: &Self) -> bool {
+        if self.shape != other.shape {
+            return false;
+        }
+
+        let (width, height) = self.shape;
+        for x in 0..width {
+            for y in 0..height {
+                if self.data[x + y * width] != other.data[x + y * width] {
+                    return false;
+                }
+            }
+        }
+
+        true
     }
 }
