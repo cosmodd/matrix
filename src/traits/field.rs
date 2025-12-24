@@ -1,11 +1,11 @@
-use std::{cmp, fmt};
+use std::fmt;
 
 pub trait Field:
     Sized
     + Copy
     + fmt::Display
     + fmt::Debug
-    + cmp::PartialEq
+    + PartialEq
 {}
 
 impl Field for f32 {}
