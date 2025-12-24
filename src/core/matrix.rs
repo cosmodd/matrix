@@ -23,7 +23,7 @@ impl<K: Field> Matrix<K> {
 
         for x in 0..W {
             for y in 0..H {
-                data.push(values[y][x].clone());
+                data.push(values[y][x]);
             }
         }
 
@@ -38,7 +38,7 @@ impl<K: Field> Matrix<K> {
 
         for x in 0..W {
             for y in 0..H {
-                data.push(values[x][y].clone());
+                data.push(values[x][y]);
             }
         }
 
