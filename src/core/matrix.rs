@@ -1,16 +1,15 @@
 #![allow(dead_code)]
 
+use crate::traits::Field;
 use std::fmt;
-use std::fmt::Formatter;
 
 #[derive(Debug)]
-pub struct Matrix<K> {
+pub struct Matrix<K: Field> {
     shape: (usize, usize),
     data: Vec<K>,
 }
 
-impl<K> Matrix<K>
-{
+impl<K: Field> Matrix<K> {
     pub fn shape(&self) -> (usize, usize) {
         self.shape
     }
@@ -18,9 +17,7 @@ impl<K> Matrix<K>
     pub fn is_square(&self) -> bool {
         self.shape.0 == self.shape.1
     }
-}
 
-impl<K> Matrix<K> where K: Clone {
     pub fn from_rows<const W: usize, const H: usize>(values: [[K; W]; H]) -> Self {
         let mut data = Vec::<K>::with_capacity(W * H);
 
@@ -52,9 +49,7 @@ impl<K> Matrix<K> where K: Clone {
     }
 }
 
-impl<K> Clone for Matrix<K>
-where
-    K: Clone,
+impl<K: Field> Clone for Matrix<K>
 {
     fn clone(&self) -> Self {
         Matrix {
@@ -64,11 +59,9 @@ where
     }
 }
 
-impl<K> fmt::Display for Matrix<K>
-where
-    K: fmt::Display,
+impl<K: Field> fmt::Display for Matrix<K>
 {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let (width, height) = self.shape;
 
         let mut col_widths = vec![0; width];
@@ -106,7 +99,8 @@ where
     }
 }
 
-impl<K> PartialEq for Matrix<K> where K: PartialEq {
+impl<K: Field> PartialEq for Matrix<K>
+{
     fn eq(&self, other: &Self) -> bool {
         if self.shape != other.shape {
             return false;

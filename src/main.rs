@@ -2,6 +2,7 @@ use crate::core::matrix::Matrix;
 use crate::core::vector::Vector;
 
 mod core;
+mod traits;
 
 fn main() {
     let ma = Matrix::from_rows([
