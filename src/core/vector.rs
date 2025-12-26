@@ -2,7 +2,7 @@
 
 use crate::core::matrix::Matrix;
 use crate::traits::Field;
-use std::fmt;
+use std::{fmt, ops};
 
 #[derive(Debug)]
 pub struct Vector<K: Field> {
@@ -45,5 +45,37 @@ impl<K: Field> PartialEq for Vector<K> {
         }
 
         self.data == other.data
+    }
+}
+
+impl<K: Field> ops::Add for Vector<K> {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        assert_eq!(self.size(), rhs.size(), "Vector addition size mismatch.");
+        Vector {
+            data: self.data + rhs.data,
+        }
+    }
+}
+
+impl<K: Field> ops::Sub for Vector<K> {
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        assert_eq!(self.size(), rhs.size(), "Vector subtraction size mismatch.");
+        Vector {
+            data: self.data - rhs.data,
+        }
+    }
+}
+
+impl<K: Field> ops::Mul<K> for Vector<K> {
+    type Output = Self;
+
+    fn mul(self, rhs: K) -> Self::Output {
+        Vector {
+            data: self.data * rhs,
+        }
     }
 }

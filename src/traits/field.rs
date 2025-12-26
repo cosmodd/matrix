@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{fmt, ops};
 
 pub trait Field:
     Sized
@@ -6,6 +6,9 @@ pub trait Field:
     + fmt::Display
     + fmt::Debug
     + PartialEq
+    + ops::Add<Output = Self>
+    + ops::Sub<Output = Self>
+    + ops::Mul<Output = Self>
 {}
 
 impl Field for f32 {}

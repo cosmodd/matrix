@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use crate::traits::Field;
-use std::fmt;
+use std::{fmt, ops};
 
 #[derive(Debug)]
 pub struct Matrix<K: Field> {
@@ -116,5 +116,51 @@ impl<K: Field> PartialEq for Matrix<K>
         }
 
         true
+    }
+}
+
+impl<K: Field> ops::Add for Matrix<K> {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        assert_eq!(self.shape(), rhs.shape(), "Matrix addition dimensions mismatch.");
+
+        let mut result = self.clone();
+
+        for (a, b) in result.data.iter_mut().zip(rhs.data.iter()) {
+            *a = *a + *b;
+        }
+
+        result
+    }
+}
+
+impl<K: Field> ops::Sub for Matrix<K> {
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        assert_eq!(self.shape(), rhs.shape(), "Matrix substraction dimensions mismatch.");
+
+        let mut result = self.clone();
+
+        for (a, b) in result.data.iter_mut().zip(rhs.data.iter()) {
+            *a = *a - *b;
+        }
+
+        result
+    }
+}
+
+impl<K: Field> ops::Mul<K> for Matrix<K> {
+    type Output = Self;
+
+    fn mul(self, rhs: K) -> Self::Output {
+        let mut result = self.clone();
+
+        for value in result.data.iter_mut() {
+            *value = *value * rhs
+        }
+
+        result
     }
 }
