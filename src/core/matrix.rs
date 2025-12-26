@@ -164,3 +164,84 @@ impl<K: Field> ops::Mul<K> for Matrix<K> {
         result
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_matrix_addition() {
+        let a = Matrix::from_rows([
+            [1., 2., 3.],
+            [4., 5., 6.],
+            [7., 8., 9.],
+        ]);
+        let b = Matrix::from_rows([
+            [1., 2., 2.],
+            [3., 1., 2.],
+            [3., 3., 1.],
+        ]);
+
+        assert_eq!(a.clone() + b.clone(), Matrix::from_rows([
+            [2., 4., 5.],
+            [7., 6., 8.],
+            [10., 11., 10.],
+        ]));
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_matrix_addition_panic() {
+        let a = Matrix::from_rows([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]]);
+        let b = Matrix::from_rows([[1., 2.], [3., 4.], [5., 6.], [7., 8.]]);
+        let _ = a + b;
+    }
+
+    #[test]
+    fn test_matrix_subtraction() {
+        let a = Matrix::from_rows([
+            [1., 2., 3.],
+            [4., 5., 6.],
+            [7., 8., 9.],
+        ]);
+        let b = Matrix::from_rows([
+            [1., 2., 2.],
+            [3., 1., 2.],
+            [3., 3., 1.],
+        ]);
+
+        assert_eq!(a.clone() - b.clone(), Matrix::from_rows([
+            [0., 0., 1.],
+            [1., 4., 4.],
+            [4., 5., 8.],
+        ]));
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_matrix_substraction_panic() {
+        let a = Matrix::from_rows([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]]);
+        let b = Matrix::from_rows([[1., 2.], [3., 4.], [5., 6.], [7., 8.]]);
+        let _ = a - b;
+    }
+
+    #[test]
+    fn test_matrix_multiplication() {
+        let a = Matrix::from_rows([
+            [1., 2., 3.],
+            [4., 5., 6.],
+            [7., 8., 9.],
+        ]);
+
+        assert_eq!(a.clone() * 10.0, Matrix::from_rows([
+            [10., 20., 30.],
+            [40., 50., 60.],
+            [70., 80., 90.],
+        ]));
+        assert_eq!(a.clone() * -10.0, Matrix::from_rows([
+            [-10., -20., -30.],
+            [-40., -50., -60.],
+            [-70., -80., -90.],
+        ]));
+    }
+}

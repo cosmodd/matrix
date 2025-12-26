@@ -79,3 +79,45 @@ impl<K: Field> ops::Mul<K> for Vector<K> {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_vector_addition() {
+        let a = Vector::from([1., 2., 3.]);
+        let b = Vector::from([4., 5., 6.]);
+        assert_eq!(a + b, Vector::from([5., 7., 9.]));
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_vector_addition_panic() {
+        let a = Vector::from([1., 2., 3.]);
+        let b = Vector::from([4., 5., 6., 7.]);
+        let _ = a + b;
+    }
+    #[test]
+    fn test_vector_subtraction() {
+        let a = Vector::from([1., 2., 3.]);
+        let b = Vector::from([4., 5., 6.]);
+        assert_eq!(a - b, Vector::from([-3., -3., -3.]));
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_vector_substraction_panic() {
+        let a = Vector::from([1., 2., 3.]);
+        let b = Vector::from([4., 5., 6., 7.]);
+        let _ = a - b;
+    }
+
+    #[test]
+    fn test_vector_multiplication() {
+        let a = Vector::from([1., 2., 3.]);
+        assert_eq!(a.clone() * 2., Vector::from([2., 4., 6.]));
+        assert_eq!(a.clone() * -2., Vector::from([-2., -4., -6.]));
+    }
+
+}
