@@ -170,6 +170,27 @@ mod tests {
     use super::*;
 
     #[test]
+    fn test_matrix_from_rows() {
+        let mat = Matrix::from_rows([
+            [1., 2., 3., 4., 5.],
+            [6., 7., 8., 9., 10.],
+        ]);
+
+        assert_eq!(mat.data, [1., 6., 2., 7., 3., 8., 4., 9., 5., 10.]);
+        assert_eq!(mat.shape, (5, 2));
+    }
+
+    fn test_matrix_from_columns() {
+        let mat = Matrix::from_columns([
+            [1., 2., 3., 4., 5.],
+            [6., 7., 8., 9., 10.],
+        ]);
+
+        assert_eq!(mat.data, [1., 2., 3., 4., 5., 6., 7., 8., 9., 10.]);
+        assert_eq!(mat.shape, (2, 5));
+    }
+
+    #[test]
     fn test_matrix_addition() {
         let a = Matrix::from_rows([
             [1., 2., 3.],
