@@ -48,6 +48,22 @@ impl<K: Field> PartialEq for Vector<K> {
     }
 }
 
+impl<K: Field> ops::Index<usize> for Vector<K> {
+    type Output = K;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        assert!(index < self.size());
+        &self.data[(0, index)]
+    }
+}
+
+impl<K: Field> ops::IndexMut<usize> for Vector<K> {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        assert!(index < self.size());
+        &mut self.data[(0, index)]
+    }
+}
+
 impl<K: Field> ops::Add for Vector<K> {
     type Output = Self;
 
@@ -83,6 +99,30 @@ impl<K: Field> ops::Mul<K> for Vector<K> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_vector_index() {
+        let vec = Vector::from([1., 2., 3.]);
+        assert_eq!(vec[0], 1.);
+        assert_eq!(vec[1], 2.);
+        assert_eq!(vec[2], 3.);
+    }
+
+    #[test]
+    fn test_vector_index_mut() {
+        let mut vec = Vector::from([1., 2., 3.]);
+        assert_eq!(vec[0], 1.);
+        assert_eq!(vec[1], 2.);
+        assert_eq!(vec[2], 3.);
+
+        vec[0] = 3.;
+        vec[1] = 4.;
+        vec[2] = 5.;
+
+        assert_eq!(vec[0], 3.);
+        assert_eq!(vec[1], 4.);
+        assert_eq!(vec[2], 5.);
+    }
 
     #[test]
     fn test_vector_addition() {

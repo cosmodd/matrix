@@ -119,6 +119,24 @@ impl<K: Field> PartialEq for Matrix<K>
     }
 }
 
+impl<K: Field> ops::Index<(usize, usize)> for Matrix<K> {
+    type Output = K;
+
+    fn index(&self, (x, y): (usize, usize)) -> &Self::Output {
+        assert!(x < self.shape.0);
+        assert!(y < self.shape.1);
+        &self.data[x * self.shape.1 + y]
+    }
+}
+
+impl<K: Field> ops::IndexMut<(usize, usize)> for Matrix<K> {
+    fn index_mut(&mut self, (x, y): (usize, usize)) -> &mut Self::Output {
+        assert!(x < self.shape.0);
+        assert!(y < self.shape.1);
+        &mut self.data[x * self.shape.1 + y]
+    }
+}
+
 impl<K: Field> ops::Add for Matrix<K> {
     type Output = Self;
 
@@ -188,6 +206,40 @@ mod tests {
 
         assert_eq!(mat.data, [1., 2., 3., 4., 5., 6., 7., 8., 9., 10.]);
         assert_eq!(mat.shape, (2, 5));
+    }
+
+    #[test]
+    fn test_matrix_index() {
+        let mat = Matrix::from_rows([
+            [1., 2., 3., 4., 5.],
+            [6., 7., 8., 9., 10.],
+        ]);
+
+        for i in 0..10 {
+            let x = i % 5;
+            let y = i / 5;
+            assert_eq!(mat[(x, y)], (i + 1) as f64);
+        }
+    }
+
+    #[test]
+    fn test_matrix_index_mut() {
+        let mut mat = Matrix::from_rows([
+            [1., 2., 3., 4., 5.],
+            [6., 7., 8., 9., 10.],
+        ]);
+
+        for i in 0..10 {
+            let x = i % 5;
+            let y = i / 5;
+            assert_eq!(mat[(x, y)], (i + 1) as f64);
+        }
+
+        for i in 0..10 {
+            let x = i % 5;
+            let y = i / 5;
+            let new_value = ((i as f64) + 1.) * 10.;
+        }
     }
 
     #[test]
