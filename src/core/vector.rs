@@ -13,6 +13,12 @@ impl<K: Field> Vector<K> {
     pub fn size(&self) -> usize {
         self.data.shape().1
     }
+
+    pub fn from_elem(elem: K, size: usize) -> Self {
+        Vector {
+            data: Matrix::from_elem(elem, 1, size)
+        }
+    }
 }
 
 impl<K: Field> Clone for Vector<K> {

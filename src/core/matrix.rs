@@ -47,6 +47,13 @@ impl<K: Field> Matrix<K> {
             data,
         }
     }
+    
+    pub fn from_elem(elem: K, width: usize, height: usize) -> Self {
+        Matrix {
+            shape: (width, height),
+            data: vec![elem; width * height],
+        }
+    }
 }
 
 impl<K: Field> Clone for Matrix<K>
