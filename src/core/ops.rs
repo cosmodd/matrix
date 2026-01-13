@@ -1,6 +1,5 @@
 use crate::core::Vector;
-use crate::traits;
-use crate::traits::Field;
+use crate::traits::{Field, MulAdd};
 use std::ops;
 
 pub fn linear_combination<K: Field>(vectors: &[Vector<K>], coeffs: &[K]) -> Vector<K> {
@@ -14,7 +13,7 @@ pub fn linear_combination<K: Field>(vectors: &[Vector<K>], coeffs: &[K]) -> Vect
 
     for (vector, coeff) in vectors.iter().zip(coeffs.iter()) {
         for i in 0..vector.size() {
-            result[i] = traits::MulAdd::mul_add(vector[i], *coeff, result[i]);
+            result[i] = MulAdd::mul_add(vector[i], *coeff, result[i]);
         }
     }
 
