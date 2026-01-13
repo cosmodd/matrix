@@ -238,7 +238,13 @@ mod tests {
         for i in 0..10 {
             let x = i % 5;
             let y = i / 5;
-            let new_value = ((i as f64) + 1.) * 10.;
+            mat[(x, y)] = ((i as f64) + 1.) * 10.;
+        }
+
+        for i in 0..10 {
+            let x = i % 5;
+            let y = i / 5;
+            assert_eq!(mat[(x, y)], ((i as f64) + 1.) * 10.);
         }
     }
 
