@@ -249,6 +249,17 @@ mod tests {
     }
 
     #[test]
+    #[should_panic]
+    fn test_matrix_index_panic() {
+        let mat = Matrix::from_rows([
+            [1., 2., 3., 4., 5.],
+            [6., 7., 8., 9., 10.],
+        ]);
+
+        mat[(10, 10)];
+    }
+
+    #[test]
     fn test_matrix_addition() {
         let a = Matrix::from_rows([
             [1., 2., 3.],
