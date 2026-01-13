@@ -1,9 +1,11 @@
-use crate::traits::MulAdd;
+use crate::traits::{MulAdd, One, Zero};
 use std::{fmt, ops};
 
 pub trait Field:
     Sized
     + Copy
+    + One
+    + Zero
     + MulAdd
     + fmt::Display
     + fmt::Debug
