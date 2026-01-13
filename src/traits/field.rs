@@ -1,8 +1,10 @@
+use crate::traits::MulAdd;
 use std::{fmt, ops};
 
 pub trait Field:
     Sized
     + Copy
+    + MulAdd
     + fmt::Display
     + fmt::Debug
     + PartialEq
