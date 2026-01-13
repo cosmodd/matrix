@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use crate::core::matrix::Matrix;
-use crate::traits::Field;
+use crate::traits::{Field, MulAdd};
 use std::{fmt, ops};
 
 #[derive(Debug)]
@@ -18,6 +18,17 @@ impl<K: Field> Vector<K> {
         Vector {
             data: Matrix::from_elem(elem, 1, size)
         }
+    }
+
+    pub fn dot(self, other: Vector<K>) -> K {
+        assert_eq!(self.size(), other.size(), "Vector dot size mismatch.");
+        let mut result = K::zero();
+
+        for i in 0..self.size() {
+            result = MulAdd::mul_add(self[i], other[i], result);
+        }
+
+        result
     }
 }
 
@@ -166,4 +177,10 @@ mod tests {
         assert_eq!(a.clone() * -2., Vector::from([-2., -4., -6.]));
     }
 
+    #[test]
+    fn test_vector_dot() {
+        assert_eq!(Vector::from([0., 0.]).dot(Vector::from([1., 1.])), 0.);
+        assert_eq!(Vector::from([1., 1.]).dot(Vector::from([1., 1.])), 2.);
+        assert_eq!(Vector::from([-1., 6.]).dot(Vector::from([3., 2.])), 9.);
+    }
 }
