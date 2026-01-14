@@ -26,5 +26,5 @@ macro_rules! impl_zero_int {
     };
 }
 
-impl_zero_int!(u8, u16, u32, u64, u128, usize);
-impl_zero_int!(i8, i16, i32, i64, i128, isize);
+impl_zero_int!(u8, u16, u32, u64, u128);
+impl_zero_int!(i8, i16, i32, i64, i128);

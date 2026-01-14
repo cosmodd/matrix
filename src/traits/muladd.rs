@@ -29,8 +29,8 @@ macro_rules! impl_muladd_int {
     };
 }
 
-impl_muladd_int!(i8, i16, i32, i64, i128, isize);
-impl_muladd_int!(u8, u16, u32, u64, u128, usize);
+impl_muladd_int!(i8, i16, i32, i64, i128);
+impl_muladd_int!(u8, u16, u32, u64, u128);
 
 #[cfg(test)]
 mod tests {
@@ -64,12 +64,10 @@ mod tests {
     test_muladd_int!(muladd_u32, u32);
     test_muladd_int!(muladd_u64, u64);
     test_muladd_int!(muladd_u128, u128);
-    test_muladd_int!(muladd_usize, usize);
 
     test_muladd_int!(muladd_i8, i8);
     test_muladd_int!(muladd_i16, i16);
     test_muladd_int!(muladd_i32, i32);
     test_muladd_int!(muladd_i64, i64);
     test_muladd_int!(muladd_i128, i128);
-    test_muladd_int!(muladd_isize, isize);
 }
