@@ -24,6 +24,10 @@ pub fn lerp<T>(u: T, v: T, coeff: f32) -> T where T: ops::Mul<f32, Output = T> +
     (v - u.clone()) * coeff + u
 }
 
+pub fn angle_cos<K: Field>(u: &Vector<K>, v: &Vector<K>) -> K {
+    u.clone().dot(v.clone()) / (u.clone().norm() * v.clone().norm())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -61,5 +65,40 @@ mod tests {
             [11., 5.5],
             [16.5, 22.]
         ]));
+    }
+
+    #[test]
+    fn test_angle_cos() {
+        let u: Vector<f32> = Vector::from([1., 0.]);
+        let v: Vector<f32> = Vector::from([1., 0.]);
+        assert_eq!(angle_cos(&u, &v), 1.);
+
+        let u: Vector<f32> = Vector::from([1., 0.]);
+        let v: Vector<f32> = Vector::from([0., 1.]);
+        assert_eq!(angle_cos(&u, &v), 0.);
+
+        let u: Vector<f32> = Vector::from([-1., 1.]);
+        let v: Vector<f32> = Vector::from([1., -1.]);
+        assert!(angle_cos(&u, &v) + 1. <= f32::EPSILON);
+
+        let u: Vector<f32> = Vector::from([2., 1.]);
+        let v: Vector<f32> = Vector::from([4., 2.]);
+        assert!(angle_cos(&u, &v) - 1. <= f32::EPSILON);
+        let u: Vector<f64> = Vector::from([1., 0.]);
+
+        let v: Vector<f64> = Vector::from([1., 0.]);
+        assert_eq!(angle_cos(&u, &v), 1.);
+
+        let u: Vector<f64> = Vector::from([1., 0.]);
+        let v: Vector<f64> = Vector::from([0., 1.]);
+        assert_eq!(angle_cos(&u, &v), 0.);
+
+        let u: Vector<f64> = Vector::from([-1., 1.]);
+        let v: Vector<f64> = Vector::from([1., -1.]);
+        assert!(angle_cos(&u, &v) + 1. <= f64::EPSILON);
+
+        let u: Vector<f64> = Vector::from([2., 1.]);
+        let v: Vector<f64> = Vector::from([4., 2.]);
+        assert!(angle_cos(&u, &v) - 1. <= f64::EPSILON);
     }
 }

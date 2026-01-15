@@ -17,6 +17,7 @@ pub trait Field:
     + ops::Add<Output = Self>
     + ops::Sub<Output = Self>
     + ops::Mul<Output = Self>
+    + ops::Div<Output = Self>
 {}
 
 macro_rules! impl_field_float {
