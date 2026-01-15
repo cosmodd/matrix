@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use crate::core::matrix::Matrix;
-use crate::traits::{Field, MulAdd};
+use crate::traits::{Abs, Field, MulAdd, Sqrt};
 use std::{fmt, ops};
 
 #[derive(Debug)]
@@ -26,6 +26,39 @@ impl<K: Field> Vector<K> {
 
         for i in 0..self.size() {
             result = MulAdd::mul_add(self[i], other[i], result);
+        }
+
+        result
+    }
+
+    pub fn norm_1(self) -> K {
+        let mut result: K = K::zero();
+
+        for i in 0..self.size() {
+            result = result + Abs::abs(self[i]);
+        }
+
+        result
+    }
+
+    pub fn norm(self) -> K {
+        let mut result: K = K::zero();
+
+        for i in 0..self.size() {
+            result = result + (self[i] * self[i])
+        }
+
+        Sqrt::sqrt(result)
+    }
+
+    pub fn norm_inf(self) -> K {
+        let mut result = Abs::abs(self[0]);
+
+        for i in 1..self.size() {
+            let abs_value = Abs::abs(self[i]);
+            if abs_value > result {
+                result = abs_value;
+            }
         }
 
         result
@@ -182,5 +215,41 @@ mod tests {
         assert_eq!(Vector::from([0., 0.]).dot(Vector::from([1., 1.])), 0.);
         assert_eq!(Vector::from([1., 1.]).dot(Vector::from([1., 1.])), 2.);
         assert_eq!(Vector::from([-1., 6.]).dot(Vector::from([3., 2.])), 9.);
+    }
+
+    #[test]
+    fn test_vector_norm_1() {
+        let u = Vector::from_elem(0., 3);
+        assert_eq!(u.norm_1(), 0.);
+
+        let u = Vector::from([1., 2., 3.]);
+        assert_eq!(u.norm_1(), 6.0);
+
+        let u = Vector::from([-1., -2.]);
+        assert_eq!(u.norm_1(), 3.0);
+    }
+
+    #[test]
+    fn test_vector_norm() {
+        let u: Vector<f32> = Vector::from_elem(0., 3);
+        assert_eq!(u.norm(), 0.);
+
+        let u: Vector<f32> = Vector::from([1., 2., 3.]);
+        assert_eq!(u.norm(), 3.74165738);
+
+        let u: Vector<f32> = Vector::from([-1., -2.]);
+        assert_eq!(u.norm(), 2.236067977);
+    }
+
+    #[test]
+    fn test_vector_norm_inf() {
+        let u: Vector<f32> = Vector::from_elem(0., 3);
+        assert_eq!(u.norm_inf(), 0.);
+
+        let u: Vector<f32> = Vector::from([1., 2., 3.]);
+        assert_eq!(u.norm_inf(), 3.0);
+
+        let u: Vector<f32> = Vector::from([-1., -2.]);
+        assert_eq!(u.norm_inf(), 2.0);
     }
 }
