@@ -1,3 +1,5 @@
+#[allow(dead_code)]
+
 pub trait One {
     fn one() -> Self;
     fn is_one(&self) -> bool;
