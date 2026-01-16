@@ -147,46 +147,37 @@ impl<K: Field> ops::IndexMut<(usize, usize)> for Matrix<K> {
 impl<K: Field> ops::Add for Matrix<K> {
     type Output = Self;
 
-    fn add(self, rhs: Self) -> Self::Output {
+    fn add(mut self, rhs: Self) -> Self::Output {
         assert_eq!(self.shape(), rhs.shape(), "Matrix addition dimensions mismatch.");
 
-        let mut result = self.clone();
-
-        for (a, b) in result.data.iter_mut().zip(rhs.data.iter()) {
+        for (a, b) in self.data.iter_mut().zip(rhs.data.iter()) {
             *a = *a + *b;
         }
-
-        result
+        self
     }
 }
 
 impl<K: Field> ops::Sub for Matrix<K> {
     type Output = Self;
 
-    fn sub(self, rhs: Self) -> Self::Output {
+    fn sub(mut self, rhs: Self) -> Self::Output {
         assert_eq!(self.shape(), rhs.shape(), "Matrix substraction dimensions mismatch.");
 
-        let mut result = self.clone();
-
-        for (a, b) in result.data.iter_mut().zip(rhs.data.iter()) {
+        for (a, b) in self.data.iter_mut().zip(rhs.data.iter()) {
             *a = *a - *b;
         }
-
-        result
+        self
     }
 }
 
 impl<K: Field> ops::Mul<K> for Matrix<K> {
     type Output = Self;
 
-    fn mul(self, rhs: K) -> Self::Output {
-        let mut result = self.clone();
-
-        for value in result.data.iter_mut() {
+    fn mul(mut self, rhs: K) -> Self::Output {
+        for value in self.data.iter_mut() {
             *value = *value * rhs
         }
-
-        result
+        self
     }
 }
 
