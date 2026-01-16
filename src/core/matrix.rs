@@ -270,7 +270,7 @@ mod tests {
             [3., 3., 1.],
         ]);
 
-        assert_eq!(a.clone() + b.clone(), Matrix::from_rows([
+        assert_eq!(a + b, Matrix::from_rows([
             [2., 4., 5.],
             [7., 6., 8.],
             [10., 11., 10.],
@@ -298,7 +298,7 @@ mod tests {
             [3., 3., 1.],
         ]);
 
-        assert_eq!(a.clone() - b.clone(), Matrix::from_rows([
+        assert_eq!(a - b, Matrix::from_rows([
             [0., 0., 1.],
             [1., 4., 4.],
             [4., 5., 8.],
