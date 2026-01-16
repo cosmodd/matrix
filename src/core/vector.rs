@@ -20,7 +20,7 @@ impl<K: Field> Vector<K> {
         }
     }
 
-    pub fn dot(self, other: Vector<K>) -> K {
+    pub fn dot(&self, other: &Vector<K>) -> K {
         assert_eq!(self.size(), other.size(), "Vector dot size mismatch.");
         let mut result = K::zero();
 
@@ -31,7 +31,7 @@ impl<K: Field> Vector<K> {
         result
     }
 
-    pub fn norm_1(self) -> K {
+    pub fn norm_1(&self) -> K {
         let mut result: K = K::zero();
 
         for i in 0..self.size() {
@@ -41,7 +41,7 @@ impl<K: Field> Vector<K> {
         result
     }
 
-    pub fn norm(self) -> K {
+    pub fn norm(&self) -> K {
         let mut result: K = K::zero();
 
         for i in 0..self.size() {
@@ -51,7 +51,7 @@ impl<K: Field> Vector<K> {
         Sqrt::sqrt(result)
     }
 
-    pub fn norm_inf(self) -> K {
+    pub fn norm_inf(&self) -> K {
         let mut result = Abs::abs(self[0]);
 
         for i in 1..self.size() {
@@ -212,9 +212,9 @@ mod tests {
 
     #[test]
     fn test_vector_dot() {
-        assert_eq!(Vector::from([0., 0.]).dot(Vector::from([1., 1.])), 0.);
-        assert_eq!(Vector::from([1., 1.]).dot(Vector::from([1., 1.])), 2.);
-        assert_eq!(Vector::from([-1., 6.]).dot(Vector::from([3., 2.])), 9.);
+        assert_eq!(Vector::from([0., 0.]).dot(&Vector::from([1., 1.])), 0.);
+        assert_eq!(Vector::from([1., 1.]).dot(&Vector::from([1., 1.])), 2.);
+        assert_eq!(Vector::from([-1., 6.]).dot(&Vector::from([3., 2.])), 9.);
     }
 
     #[test]

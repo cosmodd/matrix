@@ -25,7 +25,7 @@ pub fn lerp<T>(u: T, v: T, coeff: f32) -> T where T: ops::Mul<f32, Output = T> +
 }
 
 pub fn angle_cos<K: Field>(u: &Vector<K>, v: &Vector<K>) -> K {
-    u.clone().dot(v.clone()) / (u.clone().norm() * v.clone().norm())
+    u.dot(&v) / (u.norm() * v.norm())
 }
 
 #[cfg(test)]
