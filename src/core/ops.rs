@@ -2,48 +2,14 @@ use crate::core::Vector;
 use crate::traits::{Field, MulAdd};
 use std::ops;
 
-pub fn linear_combination<K: Field>(vectors: &[Vector<K>], coeffs: &[K]) -> Vector<K> {
-    assert!(!vectors.is_empty(), "vectors array must not be empty");
-    assert_eq!(vectors.len(), coeffs.len(), "vectors array and coeffs array must have the same length");
-
-    let vector_size = vectors[0].size();
-    assert!(vectors.iter().all(|v| v.size() == vector_size), "vectors array must have same size");
-
-    let mut result: Vector<K> = Vector::from_elem(K::zero(), vector_size);
-
-    for (vector, coeff) in vectors.iter().zip(coeffs.iter()) {
-        for i in 0..vector.size() {
-            result[i] = MulAdd::mul_add(vector[i], *coeff, result[i]);
-        }
-    }
-
-    result
-}
-
 pub fn lerp<T>(u: T, v: T, coeff: f32) -> T where T: ops::Mul<f32, Output = T> + ops::Add<Output = T> + ops::Sub<Output = T> + Clone {
     (v - u.clone()) * coeff + u
-}
-
-pub fn angle_cos<K: Field>(u: &Vector<K>, v: &Vector<K>) -> K {
-    u.dot(&v) / (u.norm() * v.norm())
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::core::Matrix;
-
-    #[test]
-    fn test_linear_combination() {
-        let e1: Vector<f32> = Vector::from([1., 0., 0.]);
-        let e2: Vector<f32> = Vector::from([0., 1., 0.]);
-        let e3: Vector<f32> = Vector::from([0., 0., 1.]);
-        assert_eq!(linear_combination(&[e1, e2, e3], &[10., -2., 0.5]), Vector::from([10., -2., 0.5]));
-
-        let v1 = Vector::from([1., 2., 3.]);
-        let v2 = Vector::from([0., 10., -100.]);
-        assert_eq!(linear_combination(&[v1, v2], &[10., -2.]), Vector::from([10., 0., 230.]));
-    }
 
     #[test]
     fn test_lerp() {
@@ -65,40 +31,5 @@ mod tests {
             [11., 5.5],
             [16.5, 22.]
         ]));
-    }
-
-    #[test]
-    fn test_angle_cos() {
-        let u: Vector<f32> = Vector::from([1., 0.]);
-        let v: Vector<f32> = Vector::from([1., 0.]);
-        assert_eq!(angle_cos(&u, &v), 1.);
-
-        let u: Vector<f32> = Vector::from([1., 0.]);
-        let v: Vector<f32> = Vector::from([0., 1.]);
-        assert_eq!(angle_cos(&u, &v), 0.);
-
-        let u: Vector<f32> = Vector::from([-1., 1.]);
-        let v: Vector<f32> = Vector::from([1., -1.]);
-        assert!(angle_cos(&u, &v) + 1. <= f32::EPSILON);
-
-        let u: Vector<f32> = Vector::from([2., 1.]);
-        let v: Vector<f32> = Vector::from([4., 2.]);
-        assert!(angle_cos(&u, &v) - 1. <= f32::EPSILON);
-        let u: Vector<f64> = Vector::from([1., 0.]);
-
-        let v: Vector<f64> = Vector::from([1., 0.]);
-        assert_eq!(angle_cos(&u, &v), 1.);
-
-        let u: Vector<f64> = Vector::from([1., 0.]);
-        let v: Vector<f64> = Vector::from([0., 1.]);
-        assert_eq!(angle_cos(&u, &v), 0.);
-
-        let u: Vector<f64> = Vector::from([-1., 1.]);
-        let v: Vector<f64> = Vector::from([1., -1.]);
-        assert!(angle_cos(&u, &v) + 1. <= f64::EPSILON);
-
-        let u: Vector<f64> = Vector::from([2., 1.]);
-        let v: Vector<f64> = Vector::from([4., 2.]);
-        assert!(angle_cos(&u, &v) - 1. <= f64::EPSILON);
     }
 }
