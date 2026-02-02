@@ -314,7 +314,7 @@ mod tests {
     }
 
     #[test]
-    fn test_matrix_multiplication() {
+    fn test_matrix_scalar() {
         let a = Matrix::from_rows([
             [1., 2., 3.],
             [4., 5., 6.],
