@@ -85,6 +85,19 @@ impl<K: Field> Vector<K> {
     pub fn angle_cos(u: &Vector<K>, v: &Vector<K>) -> K {
         u.dot(&v) / (u.norm() * v.norm())
     }
+
+    pub fn cross(u: &Vector<K>, v: &Vector<K>) -> Vector<K> {
+        assert_eq!(u.size(), v.size());
+        assert_eq!(u.size(), 3);
+
+        let mut result = Vector::from_elem(K::zero(), u.size());
+
+        result[0] = MulAdd::mul_add(u[1], v[2], result[0]) - MulAdd::mul_add(u[2], v[1], K::zero());
+        result[1] = MulAdd::mul_add(u[2], v[0], result[1]) - MulAdd::mul_add(u[0], v[2], K::zero());
+        result[2] = MulAdd::mul_add(u[0], v[1], result[2]) - MulAdd::mul_add(u[1], v[0], K::zero());
+
+        result
+    }
 }
 
 impl<K: Field> Clone for Vector<K> {
@@ -320,5 +333,32 @@ mod tests {
         let u: Vector<f64> = Vector::from([2., 1.]);
         let v: Vector<f64> = Vector::from([4., 2.]);
         assert!(Vector::angle_cos(&u, &v) - 1. <= f64::EPSILON);
+    }
+
+    #[test]
+    fn test_cross_product() {
+        let u: Vector<f32> = Vector::from([0., 0., 1.]);
+        let v: Vector<f32> = Vector::from([1., 0., 0.]);
+        assert_eq!(Vector::cross(&u, &v), Vector::from([0., 1., 0.]));
+
+        let u: Vector<f32>  = Vector::from([1., 2., 3.]);
+        let v: Vector<f32>  = Vector::from([4., 5., 6.]);
+        assert_eq!(Vector::cross(&u, &v), Vector::from([-3., 6., -3.]));
+
+        let u: Vector<f32> = Vector::from([4., 2., -3.]);
+        let v: Vector<f32> = Vector::from([-2., -5., 16.]);
+        assert_eq!(Vector::cross(&u, &v), Vector::from([17., -58., -16.]));
+
+        let u: Vector<f64> = Vector::from([0., 0., 1.]);
+        let v: Vector<f64> = Vector::from([1., 0., 0.]);
+        assert_eq!(Vector::cross(&u, &v), Vector::from([0., 1., 0.]));
+
+        let u: Vector<f64>  = Vector::from([1., 2., 3.]);
+        let v: Vector<f64>  = Vector::from([4., 5., 6.]);
+        assert_eq!(Vector::cross(&u, &v), Vector::from([-3., 6., -3.]));
+
+        let u: Vector<f64> = Vector::from([4., 2., -3.]);
+        let v: Vector<f64> = Vector::from([-2., -5., 16.]);
+        assert_eq!(Vector::cross(&u, &v), Vector::from([17., -58., -16.]));
     }
 }
