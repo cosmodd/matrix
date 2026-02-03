@@ -55,6 +55,17 @@ impl<K: Field> Matrix<K> {
             data: vec![elem; width * height],
         }
     }
+
+    pub fn trace(&self) -> K {
+        assert!(self.is_square(), "Trace is only defined for square matrices");
+        let mut result = K::zero();
+
+        for i in 0..self.shape.0 {
+            result = result + self[(i, i)];
+        }
+
+        result
+    }
 }
 
 impl<K: Field> Clone for Matrix<K>
@@ -461,5 +472,28 @@ mod tests {
             [0., -10.],
             [-3., -1.]
         ]));
+    }
+
+    #[test]
+    fn test_matrix_trace() {
+        let u = Matrix::from_rows([
+            [1., 0.],
+            [0., 1.],
+        ]);
+        assert_eq!(u.trace(), 2.0);
+
+        let u = Matrix::from_rows([
+            [2., -5., 0.],
+            [4., 3., 7.],
+            [-2., 3., 4.],
+        ]);
+        assert_eq!(u.trace(), 9.0);
+
+        let u = Matrix::from_rows([
+            [-2., -8., 4.],
+            [1., -23., 4.],
+            [0., 6., 4.],
+        ]);
+        assert_eq!(u.trace(), -21.0);
     }
 }
