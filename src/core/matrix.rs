@@ -66,6 +66,18 @@ impl<K: Field> Matrix<K> {
 
         result
     }
+
+    pub fn transpose(&self) -> Matrix<K> {
+        let mut result = Matrix::from_elem(K::zero(), self.shape.1, self.shape.0);
+
+        for y in 0..self.shape.1 {
+            for x in 0..self.shape.0 {
+                result[(y, x)] = self[(x, y)];
+            }
+        }
+
+        result
+    }
 }
 
 impl<K: Field> Clone for Matrix<K>
@@ -495,5 +507,30 @@ mod tests {
             [0., 6., 4.],
         ]);
         assert_eq!(u.trace(), -21.0);
+    }
+
+    #[test]
+    fn test_matrix_transpose() {
+        let u = Matrix::from_rows([[1., 2.]]);
+        assert_eq!(u.transpose(), Matrix::from_columns([[1., 2.]]));
+
+        let u = Matrix::from_rows([
+            [1., 2.],
+            [3., 4.],
+        ]);
+        assert_eq!(u.transpose(), Matrix::from_rows([
+            [1., 3.],
+            [2., 4.],
+        ]));
+
+        let u = Matrix::from_rows([
+            [1., 2.],
+            [3., 4.],
+            [5., 6.],
+        ]);
+        assert_eq!(u.transpose(), Matrix::from_rows([
+            [1., 3., 5.],
+            [2., 4., 6.],
+        ]));
     }
 }
