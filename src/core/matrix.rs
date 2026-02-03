@@ -1,6 +1,7 @@
 #![allow(dead_code)]
 
-use crate::traits::Field;
+use crate::core::Vector;
+use crate::traits::{Field, MulAdd};
 use std::{fmt, ops};
 
 #[derive(Debug)]
@@ -181,6 +182,46 @@ impl<K: Field> ops::Mul<K> for Matrix<K> {
     }
 }
 
+impl<K: Field> ops::Mul<Matrix<K>> for Matrix<K> {
+    type Output = Matrix<K>;
+
+    fn mul(self, rhs: Matrix<K>) -> Self::Output {
+        assert_eq!(self.shape().0, rhs.shape().1, "Left matrix width must equal right matrix height");
+        let mut result = Matrix::from_elem(K::zero(), rhs.shape().0, self.shape().1);
+
+        println!("======================================");
+        println!("{self}");
+        println!("{rhs}");
+        for ly in 0..self.shape().1 {
+            for rx in 0..rhs.shape().0 {
+                for i in 0..self.shape().0 {
+                    println!("[{rx}, {ly}; {}] += {} * {}", result[(rx, ly)], self[(i, ly)],  rhs[(rx, i)]);
+                    result[(rx, ly)] = MulAdd::mul_add(self[(i, ly)], rhs[(rx, i)], result[(rx, ly)]);
+                }
+            }
+        }
+
+        result
+    }
+}
+
+impl<K: Field> ops::Mul<Vector<K>> for Matrix<K> {
+    type Output = Vector<K>;
+
+    fn mul(self, mut rhs: Vector<K>) -> Self::Output {
+        assert_eq!(rhs.size(), self.shape().0, "Vector size must equal matrix width");
+        let mut result = Vector::from_elem(K::zero(), self.shape().1);
+
+        for row in 0..self.shape().1 {
+            for i in 0..rhs.size() {
+                result[row] = MulAdd::mul_add(self[(i, row)], rhs[i], result[row]);
+            }
+        }
+
+        result
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -330,6 +371,95 @@ mod tests {
             [-10., -20., -30.],
             [-40., -50., -60.],
             [-70., -80., -90.],
+        ]));
+    }
+
+    #[test]
+    fn test_matrix_mult_vec() {
+        let a = Matrix::from_rows([
+            [1., 0.],
+            [0., 1.],
+        ]);
+        let u = Vector::from([4., 2.]);
+        assert_eq!(a * u, Vector::from([4., 2.]));
+
+        let a = Matrix::from_rows([
+            [2., 0.],
+            [0., 2.],
+        ]);
+        let u = Vector::from([4., 2.]);
+        assert_eq!(a * u, Vector::from([8., 4.]));
+
+        let a = Matrix::from_rows([
+            [2., -2.],
+            [-2., 2.],
+        ]);
+        let u = Vector::from([4., 2.]);
+        assert_eq!(a * u, Vector::from([4., -4.]));
+
+        let a = Matrix::from_rows([
+            [5., 4., 3.],
+            [8., 9., 5.],
+            [6., 5., 3.],
+            [11., 9., 6.]
+        ]);
+        let u = Vector::from([100., 80., 60.]);
+        assert_eq!(a * u, Vector::from([1000., 1820., 1180., 2180.]));
+    }
+
+    #[test]
+    fn test_matrix_mult_matrix() {
+        let u = Matrix::from_rows([
+            [1., 0.],
+            [0., 1.],
+        ]);
+        let v = Matrix::from_rows([
+             [1., 0.],
+             [0., 1.],
+         ]);
+        assert_eq!(u * v, Matrix::from_rows([
+            [1., 0.],
+            [0., 1.]
+        ]));
+
+        let u = Matrix::from_rows([
+            [1., 0.],
+            [0., 1.],
+        ]);
+        let v = Matrix::from_rows([
+            [2., 1.],
+            [4., 2.],
+        ]);
+        assert_eq!(u * v, Matrix::from_rows([
+            [2., 1.],
+            [4., 2.]
+        ]));
+
+        let u = Matrix::from_rows([
+            [3., -5.],
+            [6., 8.],
+        ]);
+        let v = Matrix::from_rows([
+            [2., 1.],
+            [4., 2.],
+        ]);
+        assert_eq!(u * v, Matrix::from_rows([
+            [-14., -7.],
+            [44., 22.]
+        ]));
+
+        let u = Matrix::from_rows([
+            [0., 4., -2.],
+            [-4., -3., 0.],
+        ]);
+        let v = Matrix::from_rows([
+            [0., 1.],
+            [1., -1.],
+            [2., 3.]
+        ]);
+        assert_eq!(u * v, Matrix::from_rows([
+            [0., -10.],
+            [-3., -1.]
         ]));
     }
 }
