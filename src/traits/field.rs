@@ -18,6 +18,7 @@ pub trait Field:
     + ops::Sub<Output = Self>
     + ops::Mul<Output = Self>
     + ops::Div<Output = Self>
+    + ops::Neg<Output = Self>
 {}
 
 macro_rules! impl_field_float {
@@ -39,4 +40,3 @@ macro_rules! impl_field_int {
 }
 
 impl_field_int!(i8, i16, i32, i64, i128);
-impl_field_int!(u8, u16, u32, u64, u128);
