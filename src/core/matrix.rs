@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use crate::core::Vector;
-use crate::traits::{Field, MulAdd};
+use crate::traits::{Abs, Field, MulAdd};
 use std::{fmt, ops};
 
 #[derive(Debug)]
@@ -74,6 +74,49 @@ impl<K: Field> Matrix<K> {
             for x in 0..self.shape.0 {
                 result[(y, x)] = self[(x, y)];
             }
+        }
+
+        result
+    }
+
+    pub fn row_echelon(&self) -> Matrix<K> {
+        let mut result = self.clone();
+        let (cols, rows) = result.shape;
+        let mut y: usize = 0;
+
+        for x in 0..cols {
+            let pivot_row = (y..rows).find(|&y| { result[(x, y)] != K::zero() });
+            if pivot_row.is_none() {
+                continue;
+            }
+            let pivot_row = pivot_row.unwrap();
+
+            // Swap current row with pivot row
+            if pivot_row != y {
+                for i in 0..cols {
+                    let temp = result[(i, y)];
+                    result[(i, y)] = result[(i, pivot_row)];
+                    result[(i, pivot_row)] = temp;
+                }
+            }
+
+            // Normalize pivot (left-most number should be one)
+            let pivot = result[(x, y)];
+            for i in 0..cols {
+                result[(i, y)] = result[(i, y)] / pivot;
+            }
+
+            // Simplifying other lines
+            for row in 0..rows {
+                if row == y { continue; }
+                if result[(x, row)] == K::zero() { continue; }
+                let mult = result[(x, row)] / result[(x, y)];
+                for col in 0..cols {
+                    result[(col, row)] = result[(col, row)] - result[(col, y)] * mult;
+                }
+            }
+
+            y += 1;
         }
 
         result
@@ -531,6 +574,50 @@ mod tests {
         assert_eq!(u.transpose(), Matrix::from_rows([
             [1., 3., 5.],
             [2., 4., 6.],
+        ]));
+    }
+
+    #[test]
+    pub fn test_row_echelon() {
+        let u = Matrix::from_rows([
+            [1., 0., 0.],
+            [0., 1., 0.],
+            [0., 0., 1.],
+        ]);
+        assert_eq!(u.row_echelon(), Matrix::from_rows([
+            [1.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0],
+            [0.0, 0.0, 1.0]
+        ]));
+
+        let u = Matrix::from_rows([
+            [1., 2.],
+            [3., 4.],
+        ]);
+        println!("{}", u.row_echelon());
+        assert_eq!(u.row_echelon(), Matrix::from_rows([
+            [1.0, 0.0],
+            [0.0, 1.0]
+        ]));
+
+        let u = Matrix::from_rows([
+            [1., 2.],
+            [2., 4.],
+        ]);
+        assert_eq!(u.row_echelon(), Matrix::from_rows([
+            [1.0, 2.0],
+            [0.0, 0.0]
+        ]));
+
+        let u = Matrix::from_rows([
+            [8., 5., -2., 4., 28.],
+            [4., 2.5, 20., 4., -4.],
+            [8., 5., 1., 4., 17.],
+        ]);
+        assert_eq!(u.row_echelon(), Matrix::from_rows([
+            [1.0, 0.625, 0.0, 0.0, -12.166666666666668],
+            [0.0, 0.0, 1.0, 0.0, -3.666666666666667],
+            [0.0, 0.0, 0.0, 1.0, 29.500000000000004]
         ]));
     }
 }
