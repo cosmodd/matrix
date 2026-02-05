@@ -121,6 +121,50 @@ impl<K: Field> Matrix<K> {
 
         result
     }
+
+    pub fn determinant(&self) -> K {
+        assert!(self.is_square(), "Determinant is only defined for square matrices");
+
+        match self.shape.0 {
+            1 => self.data[0],
+            2 => self[(0, 0)] * self[(1, 1)] - self[(0, 1)] * self[(1, 0)],
+            size if size <= 4 => {
+                let mut det_matrix = self.clone();
+                let (cols, rows) = det_matrix.shape;
+                let mut y: usize = 0;
+
+                for x in 0..cols {
+                    let pivot_row = (y..rows).find(|&y| { det_matrix[(x, y)] != K::zero() });
+                    if pivot_row.is_none() {
+                        continue;
+                    }
+                    let pivot_row = pivot_row.unwrap();
+
+                    // R_y <=> -R_pr
+                    if pivot_row != y {
+                        for i in 0..cols {
+                            let temp = -det_matrix[(i, y)];
+                            det_matrix[(i, y)] = det_matrix[(i, pivot_row)];
+                            det_matrix[(i, pivot_row)] = temp;
+                        }
+                    }
+
+                    for row in (y + 1)..rows {
+                        if det_matrix[(x, row)] == K::zero() { continue; }
+                        let mult = det_matrix[(x, row)] / det_matrix[(x, y)];
+                        for col in 0..cols {
+                            det_matrix[(col, row)] = det_matrix[(col, row)] - det_matrix[(col, y)] * mult;
+                        }
+                    }
+
+                    y += 1;
+                }
+
+                (0..rows).fold(K::one(), |acc, i| acc * det_matrix[(i, i)])
+            },
+            _ => K::zero(),
+        }
+    }
 }
 
 impl<K: Field> Clone for Matrix<K>
@@ -619,5 +663,41 @@ mod tests {
             [0.0, 0.0, 1.0, 0.0, -3.666666666666667],
             [0.0, 0.0, 0.0, 1.0, 29.500000000000004]
         ]));
+    }
+
+    #[test]
+    pub fn test_determinant() {
+        let u = Matrix::from_rows([
+            [55.],
+        ]);
+        assert_eq!(u.determinant(), 55.0);
+
+        let u = Matrix::from_rows([
+            [ 1., -1.],
+            [-1., 1.],
+        ]);
+        assert_eq!(u.determinant(), 0.0);
+
+        let u = Matrix::from_rows([
+            [2., 0., 0.],
+            [0., 2., 0.],
+            [0., 0., 2.],
+        ]);
+        assert_eq!(u.determinant(), 8.0);
+
+        let u = Matrix::from_rows([
+            [8., 5., -2.],
+            [4., 7., 20.],
+            [7., 6., 1.],
+        ]);
+        assert_eq!(u.determinant(), -174.0);
+
+        let u = Matrix::from_rows([
+            [ 8., 5., -2., 4.],
+            [ 4., 2.5, 20., 4.],
+            [ 8., 5., 1., 4.],
+            [28., -4., 17., 1.],
+        ]);
+        assert_eq!(u.determinant(), 1032.0);
     }
 }
