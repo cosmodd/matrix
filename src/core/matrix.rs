@@ -56,6 +56,16 @@ impl<K: Field> Matrix<K> {
         }
     }
 
+    pub fn identity(size: usize) -> Self {
+        let mut mat = Matrix::from_elem(K::zero(), size, size);
+
+        for i in 0..size {
+            mat[(i, i)] = K::one();
+        }
+
+        mat
+    }
+
     pub fn trace(&self) -> K {
         assert!(self.is_square(), "Trace is only defined for square matrices");
         let mut result = K::zero();
