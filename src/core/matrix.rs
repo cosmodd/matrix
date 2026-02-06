@@ -175,6 +175,31 @@ impl<K: Field> Matrix<K> {
             _ => K::zero(),
         }
     }
+
+    pub fn inverse(&self) -> Matrix<K> {
+        assert_eq!(self.shape.0, self.shape.1, "Inverse matrix is only defined for square matrices");
+        assert_ne!(self.determinant(), K::zero(), "Matrix is not invertible");
+
+        let (cols, rows) = (self.shape.0, self.shape.1);
+        let mut inv_calc = Matrix::from_elem(K::zero(), cols * 2, rows);
+
+        for y in 0..rows {
+            for x in 0..cols {
+                inv_calc[(x, y)] = self[(x, y)];
+            }
+            inv_calc[(cols + y, y)] = K::one();
+        }
+        inv_calc = inv_calc.row_echelon();
+
+        let mut result = self.clone();
+        for y in 0..rows {
+            for x in 0..cols {
+                result[(x, y)] = inv_calc[(cols + x, y)];
+            }
+        }
+
+        result
+    }
 }
 
 impl<K: Field> Clone for Matrix<K>
@@ -709,5 +734,41 @@ mod tests {
             [28., -4., 17., 1.],
         ]);
         assert_eq!(u.determinant(), 1032.0);
+    }
+
+    #[test]
+    pub fn test_inverse() {
+        let u = Matrix::from_rows([
+            [1., 0., 0.],
+            [0., 1., 0.],
+            [0., 0., 1.],
+        ]);
+        assert_eq!(u.inverse(), Matrix::from_rows([
+            [1.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0],
+            [0.0, 0.0, 1.0]
+        ]));
+
+        let u = Matrix::from_rows([
+            [2., 0., 0.],
+            [0., 2., 0.],
+            [0., 0., 2.],
+        ]);
+        assert_eq!(u.inverse(), Matrix::from_rows([
+            [0.5, 0.0, 0.0],
+            [0.0, 0.5, 0.0],
+            [0.0, 0.0, 0.5]
+        ]));
+
+        let u = Matrix::from_rows([
+            [8., 5., -2.],
+            [4., 7., 20.],
+            [7., 6., 1.],
+        ]);
+        assert_eq!(u.inverse(), Matrix::from_rows([
+            [0.649425287, 0.097701149, -0.655172414],
+            [-0.781609195, -0.126436782, 0.965517241],
+            [0.143678161, 0.074712644, -0.206896552]
+        ]));
     }
 }
