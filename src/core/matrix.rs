@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use crate::core::Vector;
-use crate::traits::{Abs, Field, MulAdd};
+use crate::traits::{Field, MulAdd};
 use std::{fmt, ops};
 
 #[derive(Debug)]
@@ -367,7 +367,7 @@ impl<K: Field> ops::Mul<Matrix<K>> for Matrix<K> {
 impl<K: Field> ops::Mul<Vector<K>> for Matrix<K> {
     type Output = Vector<K>;
 
-    fn mul(self, mut rhs: Vector<K>) -> Self::Output {
+    fn mul(self, rhs: Vector<K>) -> Self::Output {
         assert_eq!(rhs.size(), self.shape().0, "Vector size must equal matrix width");
         let mut result = Vector::from_elem(K::zero(), self.shape().1);
 

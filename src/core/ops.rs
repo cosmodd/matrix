@@ -1,5 +1,5 @@
-use crate::core::Vector;
-use crate::traits::{Field, MulAdd};
+#![allow(dead_code)]
+
 use std::ops;
 
 pub fn lerp<T>(u: T, v: T, coeff: f32) -> T where T: ops::Mul<f32, Output = T> + ops::Add<Output = T> + ops::Sub<Output = T> + Clone {
@@ -10,6 +10,7 @@ pub fn lerp<T>(u: T, v: T, coeff: f32) -> T where T: ops::Mul<f32, Output = T> +
 mod tests {
     use super::*;
     use crate::core::Matrix;
+    use crate::core::Vector;
 
     #[test]
     fn test_lerp() {
