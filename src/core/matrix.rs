@@ -200,6 +200,20 @@ impl<K: Field> Matrix<K> {
 
         result
     }
+
+    pub fn rank(&self) -> usize {
+        let _ref = self.row_echelon();
+        let mut rank: usize = 0;
+        println!("{_ref}");
+
+        for y in 0.._ref.shape.1 {
+            if (0.._ref.shape.0).any(|i| _ref[(i, y)] != K::zero()) {
+                rank += 1;
+            }
+        }
+
+        rank
+    }
 }
 
 impl<K: Field> Clone for Matrix<K>
@@ -770,5 +784,30 @@ mod tests {
             [-0.781609195, -0.126436782, 0.965517241],
             [0.143678161, 0.074712644, -0.206896552]
         ]));
+    }
+
+    #[test]
+    pub fn test_rank() {
+        let u = Matrix::from_rows([
+            [1., 0., 0.],
+            [0., 1., 0.],
+            [0., 0., 1.],
+        ]);
+        assert_eq!(u.rank(), 3);
+
+        let u = Matrix::from_rows([
+            [ 1., 2., 0., 0.],
+            [ 2., 4., 0., 0.],
+            [-1., 2., 1., 1.],
+        ]);
+        assert_eq!(u.rank(), 2);
+
+        let u = Matrix::from_rows([
+            [ 8., 5., -2.],
+            [ 4., 7., 20.],
+            [ 7., 6., 1.],
+            [21., 18., 7.],
+        ]);
+        assert_eq!(u.rank(), 3);
     }
 }
