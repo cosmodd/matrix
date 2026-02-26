@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 const PI: f64 = 3.14159265358979323846264338327950288;
 
 pub trait Trig {
