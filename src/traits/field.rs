@@ -12,7 +12,7 @@ pub trait Field:
     + fmt::Debug
     + PartialEq
     + PartialOrd
-    + Abs
+    + Abs<Output = Self>
     + Sqrt
     + ops::Add<Output = Self>
     + ops::Sub<Output = Self>

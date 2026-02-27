@@ -1,12 +1,16 @@
 pub trait Abs {
-    fn abs(self) -> Self;
+    type Output;
+
+    fn abs(self) -> Self::Output;
 }
 
 macro_rules! impl_abs_float {
     ($($t:ty),*) => {
         $(
         impl Abs for $t {
-            fn abs(self) -> Self {
+            type Output = $t;
+
+            fn abs(self) -> Self::Output {
                 if self < 0.0 {
                     return -self
                 }
@@ -23,7 +27,9 @@ macro_rules! impl_abs_int {
     ($($t:ty),*) => {
         $(
         impl Abs for $t {
-            fn abs(self) -> Self {
+            type Output = $t;
+
+            fn abs(self) -> Self::Output {
                 if self < 0 {
                     return -self
                 }
@@ -40,7 +46,9 @@ macro_rules! impl_abs_uint {
     ($($t:ty),*) => {
         $(
         impl Abs for $t {
-            fn abs(self) -> Self {
+            type Output = $t;
+            
+            fn abs(self) -> Self::Output {
                 self
             }
         }
