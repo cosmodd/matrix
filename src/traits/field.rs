@@ -13,7 +13,7 @@ pub trait Field:
     + PartialEq
     + PartialOrd
     + Abs<Output = Self>
-    + Sqrt
+    + Sqrt<Output = Self>
     + ops::Add<Output = Self>
     + ops::Sub<Output = Self>
     + ops::Mul<Output = Self>

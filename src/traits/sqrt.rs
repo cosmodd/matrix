@@ -1,11 +1,15 @@
 pub trait Sqrt {
-    fn sqrt(self) -> Self;
+    type Output;
+
+    fn sqrt(self) -> Self::Output;
 }
 
 macro_rules! impl_sqrt_float {
     ($($t:ty),*) => {
         $(
         impl Sqrt for $t {
+            type Output = Self;
+
             fn sqrt(self) -> Self {
                 self.powf(0.5)
             }
@@ -20,6 +24,8 @@ macro_rules! impl_sqrt_int {
     ($($t:ty),*) => {
         $(
         impl Sqrt for $t {
+            type Output = Self;
+
             fn sqrt(self) -> Self {
                 (self as f64).powf(0.5) as Self
             }
