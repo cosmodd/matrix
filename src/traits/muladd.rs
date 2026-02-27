@@ -1,18 +1,20 @@
 pub trait MulAdd: Copy {
-    fn mul_add(self, b: Self, c: Self) -> Self;
+    /// Fused multiply-add. Computes `(self * multiplier) + addend` with only one rounding
+    /// error, yielding a more accurate result than an unfused multiply-add.
+    fn mul_add(self, multiplier: Self, addend: Self) -> Self;
 }
 
 impl MulAdd for f32 {
     #[inline]
-    fn mul_add(self, b: Self, c: Self) -> Self {
-        f32::mul_add(self, b, c)
+    fn mul_add(self, multiplier: Self, addend: Self) -> Self {
+        f32::mul_add(self, multiplier, addend)
     }
 }
 
 impl MulAdd for f64 {
     #[inline]
-    fn mul_add(self, b: Self, c: Self) -> Self {
-        f64::mul_add(self, b, c)
+    fn mul_add(self, multiplier: Self, addend: Self) -> Self {
+        f64::mul_add(self, multiplier, addend)
     }
 }
 
@@ -21,8 +23,8 @@ macro_rules! impl_muladd_int {
         $(
             impl MulAdd for $t {
                 #[inline]
-                fn mul_add(self, b: Self, c: Self) -> Self {
-                    self.wrapping_mul(b).wrapping_add(c)
+                fn mul_add(self, multiplier: Self, addend: Self) -> Self {
+                    self.wrapping_mul(multiplier).wrapping_add(addend)
                 }
             }
         )*
