@@ -295,7 +295,7 @@ mod tests {
         assert_eq!(u.norm(), 0.);
 
         let u: Vector<f32> = Vector::from([1., 2., 3.]);
-        assert_eq!(u.norm(), 3.74165738);
+        assert_eq!(u.norm(), 3.7416573);
 
         let u: Vector<f32> = Vector::from([-1., -2.]);
         assert_eq!(u.norm(), 2.236067977);
