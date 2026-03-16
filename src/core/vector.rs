@@ -49,16 +49,6 @@ impl<K: Field> Vector<K> {
         result
     }
 
-    pub fn norm_1(&self) -> K {
-        let mut result: K = K::zero();
-
-        for i in 0..self.size() {
-            result = result + Abs::abs(self[i]);
-        }
-
-        result
-    }
-
     pub fn norm(&self) -> K {
         let mut result: K = K::zero();
 
@@ -67,19 +57,6 @@ impl<K: Field> Vector<K> {
         }
 
         Sqrt::sqrt(result)
-    }
-
-    pub fn norm_inf(&self) -> K {
-        let mut result = Abs::abs(self[0]);
-
-        for i in 1..self.size() {
-            let abs_value = Abs::abs(self[i]);
-            if abs_value > result {
-                result = abs_value;
-            }
-        }
-
-        result
     }
 
     pub fn angle_cos(u: &Vector<K>, v: &Vector<K>) -> K {
@@ -95,6 +72,42 @@ impl<K: Field> Vector<K> {
         result[0] = MulAdd::mul_add(u[1], v[2], result[0]) - MulAdd::mul_add(u[2], v[1], K::zero());
         result[1] = MulAdd::mul_add(u[2], v[0], result[1]) - MulAdd::mul_add(u[0], v[2], K::zero());
         result[2] = MulAdd::mul_add(u[0], v[1], result[2]) - MulAdd::mul_add(u[1], v[0], K::zero());
+
+        result
+    }
+}
+
+impl<K> Vector<K>
+where K:
+    Field
+    + Abs<Output = K>
+{
+    pub fn norm_1(&self) -> K {
+        let mut result: K = K::zero();
+
+        for i in 0..self.size() {
+            result = result + Abs::abs(self[i]);
+        }
+
+        result
+    }
+}
+
+impl<K> Vector<K>
+where K:
+    Field
+    + PartialOrd
+    + Abs<Output = K>
+{
+    pub fn norm_inf(&self) -> K {
+        let mut result = Abs::abs(self[0]);
+
+        for i in 1..self.size() {
+            let abs_value = Abs::abs(self[i]);
+            if abs_value > result {
+                result = abs_value;
+            }
+        }
 
         result
     }

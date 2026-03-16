@@ -1,4 +1,4 @@
-use crate::traits::{Abs, MulAdd, One, Sqrt, Zero};
+use crate::traits::{MulAdd, One, Sqrt, Zero};
 use std::{fmt, ops};
 
 pub trait Field:
@@ -11,8 +11,6 @@ pub trait Field:
     + fmt::Display
     + fmt::Debug
     + PartialEq
-    + PartialOrd
-    + Abs<Output = Self>
     + Sqrt<Output = Self>
     + ops::Add<Output = Self>
     + ops::Sub<Output = Self>
