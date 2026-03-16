@@ -11,7 +11,12 @@ macro_rules! impl_sqrt_float {
             type Output = Self;
 
             fn sqrt(self) -> Self {
-                self.powf(0.5)
+                if self <= 0.0 { return 0.0; }
+                let mut guess = if self >= 1.0 { self } else { 1.0 };
+                for _ in 0..20 {
+                    guess = (guess + self / guess) / 2.0;
+                }
+                guess
             }
         }
         )*
@@ -27,7 +32,7 @@ macro_rules! impl_sqrt_int {
             type Output = Self;
 
             fn sqrt(self) -> Self {
-                (self as f64).powf(0.5) as Self
+                Sqrt::sqrt(self as f64) as Self
             }
         }
         )*
