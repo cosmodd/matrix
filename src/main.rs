@@ -1,5 +1,4 @@
 use crate::core::ops::perspective_projection;
-use crate::traits::Trig;
 
 mod core;
 mod traits;
