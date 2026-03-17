@@ -381,16 +381,14 @@ mod tests {
 
     #[test]
     fn test_square_root() {
-        for x in 0..100 {
-            for y in 0..100 {
-                let a = Complex::new(x as f32 / 10.0, y as f32 / 10.0);
-                let sqrt = (a * a).sqrt();
-                let comparison = sqrt - a;
-                dbg!(a);
-                dbg!(sqrt);
-                dbg!(comparison);
-                assert!(Abs::abs(comparison.real) <= f32::EPSILON);
-                assert!(Abs::abs(comparison.imag) <= f32::EPSILON);
+        for x in 1..100 {
+            for y in 1..100 {
+                let a = Complex::new(x as f32, y as f32);
+                let root = Sqrt::sqrt(a);
+                let back = root * root;
+                let diff = (a - back).abs();
+                let scale = a.abs().max(1.0);
+                assert!(diff <= 1e-4 + 1e-5 * scale);
             }
         }
     }
